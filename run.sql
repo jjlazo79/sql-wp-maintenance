@@ -1,3 +1,4 @@
+## Clear all revisions except last 5
 DELETE
 FROM wp_posts
 WHERE post_type = "revision"
