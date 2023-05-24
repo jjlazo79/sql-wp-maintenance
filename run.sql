@@ -12,7 +12,7 @@ WHERE post_type = "revision"
                  
 ## Delete orphans postmetas
 DELETE postmeta
-FROM wp_postmeta 
-	LEFT JOIN wp_posts
+FROM wp_postmeta AS postmeta
+	LEFT JOIN wp_posts AS posts
 	ON posts.ID = postmeta.post_id
 WHERE posts.ID IS NULL
