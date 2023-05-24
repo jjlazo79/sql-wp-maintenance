@@ -9,3 +9,10 @@ WHERE post_type = "revision"
                       ORDER BY ID
                       DESC LIMIT 5)
                  rev)
+                 
+## Delete orphans postmetas
+DELETE postmeta
+FROM wp_postmeta 
+	LEFT JOIN wp_posts
+	ON posts.ID = postmeta.post_id
+WHERE posts.ID IS NULL
