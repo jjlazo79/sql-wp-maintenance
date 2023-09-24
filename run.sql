@@ -21,7 +21,6 @@ WHERE posts.ID IS NULL
 
 
 
-
 -- Extract posts with feature image, categories, tags and metayoast
 SELECT 
  p.ID,
@@ -65,3 +64,41 @@ LEFT JOIN wp_term_taxonomy tt
 LEFT JOIN wp_terms t
     ON (tt.`term_id`=t.`term_id`)
 WHERE post_type = 'post' AND post_status = 'publish'
+
+
+-- Check Autoloaded Data Size
+SELECT SUM(LENGTH(option_value)) as autoload_size
+FROM wp_options
+WHERE autoload='yes';
+
+
+-- This will show you the autoloaded data size, how many entries are in the table, and the first 10 entries by size
+SELECT 'autoloaded data in KiB' as name, ROUND(SUM(LENGTH(option_value))/ 1024) as value
+FROM wp_options
+WHERE autoload='yes'
+    UNION
+    SELECT 'autoloaded data count', count(*)
+    FROM wp_options
+    WHERE autoload='yes'
+        UNION
+        (SELECT option_name, length(option_value)
+        FROM wp_options
+        WHERE autoload='yes'
+        ORDER BY length(option_value)
+        DESC LIMIT 10)
+
+
+-- Sort Top Autoloaded Data
+SELECT option_name, length(option_value) AS option_value_length
+FROM wp_options
+WHERE autoload='yes'
+ORDER BY option_value_length
+DESC LIMIT 10;
+
+
+-- Clean up WordPress Sessions
+DELETE 
+FROM `wp_options` 
+WHERE `option_name`
+LIKE '_wp_session_%'
+
